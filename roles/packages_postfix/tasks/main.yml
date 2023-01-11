@@ -1,6 +1,0 @@
----
-- name: Ensure postfix is installed
-  ansible.builtin.apt:
-    name:
-    - postfix
-...

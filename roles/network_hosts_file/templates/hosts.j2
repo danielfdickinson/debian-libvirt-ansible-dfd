@@ -6,7 +6,7 @@
 #     /etc/cloud/cloud.cfg or cloud-config from user-data
 #
 127.0.0.1 localhost
-{{ instance_v4address }} {{ instance_fqdn }} {{ instance_hostname }}
+{{ ansible_facts['default_ipv4']['address'] }} {{ ansible_facts['fqdn'] }} {{ ansible_facts['hostname'] }}
 
 # The following lines are desirable for IPv6 capable hosts
 ::1 ip6-localhost ip6-loopback
@@ -15,7 +15,3 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
-
-{% if instance_v6address is defined %}
-{{ instance_v6address }} {{ instance_fqdn }} {{ instance_hostname }}
-{% endif %}

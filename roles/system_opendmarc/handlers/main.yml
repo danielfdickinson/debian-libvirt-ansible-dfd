@@ -1,7 +1,0 @@
----
-- name: Restart opendmarc
-  become: yes
-  ansible.builtin.systemd:
-    name: opendmarc
-    state: restarted
-...

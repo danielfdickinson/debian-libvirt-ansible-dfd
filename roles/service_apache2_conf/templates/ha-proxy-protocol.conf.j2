@@ -1,7 +1,0 @@
-<IfModule mod_remoteip.c>
-	RemoteIPProxyProtocol {% if apache2_global_proxy_protocol is defined %}{{ apache2_global_proxy_protocol }}{% else %}On{% endif %}
-
-	# Requests to any server using this configuration must have a PROXY protocol
-	# header provided. If it is missing, the connection will be aborted.
-</IfModule>
-# vim: syntax=apache2

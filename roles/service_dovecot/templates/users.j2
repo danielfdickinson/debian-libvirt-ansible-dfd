@@ -1,3 +1,0 @@
-{%- for mailuser in mail_groupware_users %}
-{{ mailuser['localpart'] }}@{{ mailuser['maildomain'] }}:{{ mailuser['mailpassword'] }}:{{ mailuser['uid'] }}:{{ mailuser['gid'] }}::/var/vmail/{{ mailuser['localpart'] }}@{{ mailuser['maildomain'] }}::
-{% endfor %}

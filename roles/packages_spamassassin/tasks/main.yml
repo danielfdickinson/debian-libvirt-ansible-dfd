@@ -1,7 +1,0 @@
----
-- name: Ensure spamassassin is installed
-  become: yes
-  ansible.builtin.apt:
-    name:
-    - spamassassin
-...

@@ -1,5 +1,5 @@
 ---
-- name: Make default fqdn or hostname to IP to use non-localhost ipv4/ipv6
+- name: Make default fqdn or hostname to IP be the default external ipv4 address
   become: yes
   ansible.builtin.template:
     dest: /etc/hosts

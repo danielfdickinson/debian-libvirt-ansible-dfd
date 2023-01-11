@@ -14,7 +14,7 @@
   hosts: libvirtd_hosts:&{{ (envname | default('')) + '_host' }}
   gather_facts: true
   roles:
-  - bare_metal_virt_env_network_add
+  - virt_env_network_add
   vars:
     net_domain: "{{ env_config_net[envname]['net_domain'] }}"
     v4nat_addr: "{{ env_config_net[envname]['v4nat_addr'] }}"
@@ -30,7 +30,7 @@
   hosts: libvirtd_hosts:&{{ (envname | default('')) + '_host' }}
   gather_facts: true
   roles:
-  - bare_metal_virt_env_chronyd
+  - virt_env_chronyd
   vars:
     v4nat_addr: "{{ env_config_net[envname]['v4nat_addr'] }}"
     v4nat_net: "{{ env_config_net[envname]['v4nat_net'] }}"
@@ -45,7 +45,7 @@
   # Note that roles here must not interfere with other environments on the same
   # libvirtd_host
   roles:
-  - bare_metal_virt_env_forward_hooks
+  - virt_env_forward_hooks
   vars:
     domain_forwards: "{{ env_domain_forwards[envname] }}"
     guest_addrs: "{{ env_domain_addresses[envname] }}"
@@ -56,5 +56,5 @@
 - name: Add guests for {{ (envname | default('')) + '_host' }}
   hosts: libvirtd_hosts:&{{ (envname | default('')) + '_host' }}
   roles:
-  - bare_metal_virt_env_guests_add
+  - virt_env_guests_add
 ...

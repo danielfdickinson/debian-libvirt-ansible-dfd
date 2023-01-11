@@ -1,7 +1,0 @@
----
-- name: Ensure postfix SPF policy daemon is installed
-  become: yes
-  ansible.builtin.apt:
-    name:
-    - postfix-policyd-spf-python
-...
