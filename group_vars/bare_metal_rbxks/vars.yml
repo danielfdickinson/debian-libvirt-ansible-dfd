@@ -3,17 +3,11 @@ admin_base_homedir: "{{ vault_admin_base_homedir }}"
 admin_gecos: "{{ vault_admin_gecos }}"
 admin_password: "{{ vault_admin_password }}"
 admin_ssh_key: "{{ vault_admin_ssh_key }}"
-admin_ssh_key_userdata: "{{ vault_admin_ssh_key_userdata }}"
 admin_user: "{{ vault_admin_user }}"
 ansible_become_password: "{{ vault_ansible_become_password }}"
 ansible_ssh_host_key_checking: false # Note: this should be true in production
 ansible_ssh_port: "{{ vault_ansible_ssh_port }}"
 ansible_ssh_user: "{{ vault_ansible_ssh_user }}"
-env_config_net: "{{ vault_env_config_net }}"
-env_default_params: "{{ vault_env_default_params }}"
-env_domain_addresses: "{{ vault_env_domain_addresses }}"
-env_domain_creation_params: "{{ vault_env_domain_creation_params }}"
-env_domain_forwards: "{{ vault_env_domain_forwards }}"
 fallback_dns: "{{ vault_fallback_dns }}"
 libvirt_client_ssh_key: "{{ vault_libvirt_client_ssh_key }}"
 libvirt_client_user: "{{ vault_libvirt_client_user }}"
@@ -24,12 +18,40 @@ libvirt_pool_base_images: "{{ host_libvirt_pool_base_images }}"
 libvirt_pool_base_images_path: "{{ host_libvirt_pool_base_images_path }}"
 libvirt_pool_cloud_init: "{{ host_libvirt_pool_cloud_init }}"
 libvirt_pool_cloud_init_path: "{{ host_libvirt_pool_cloud_init_path }}"
-libvirtd_pool_list: "{{ vault_libvirtd_pool_list | default(None) }}"
-local_freshclam_mirror: "{{ host_local_freshclam_mirror | default(None) }}"
+libvirtd_pool_list: "{{ host_libvirtd_pool_list | default(None) }}"
 remote_admin_ip: "{{ vault_remote_admin_ip | default(None) }}"
 remote_ignore_ips: "{{ remote_admin_ip }}{% if remote_monitoring_ips is defined %} {{ remote_monitoring_ips }}{% endif %}"
 remote_monitoring_ips: "{{ vault_remote_monitoring_ips | default([]) }}"
 v6natnet_ula: "{{ vault_v6natnet_ula | default(None) }}"
+env_config_net:
+  kss:
+    net_domain: kss
+    v4nat_addr: 192.168.76.1
+    v4nat_dhcp_start: 192.168.76.33
+    v4nat_dhcp_end: 192.168.76.248
+    v4nat_net: 192.168.76.0
+    v4nat_prefix: 24
+    v6nat_addr: fda7:6731:b1ac:1000::1
+    v6nat_net: "fda7:6731:b1ac:1000::"
+    v6nat_prefix: 64
+    vbridge: virbr1
+env_default_params: "{{ vault_env_default_params }}"
+# In the vault you could have:
+#   bare_metal:
+#     admin_base_homedir: *default_admin_base_homedir
+#     admin_gecos: *default_admin_gecos
+#     admin_password: *default_admin_password
+#     admin_ssh_key: *default_admin_ssh_key
+#     admin_user: *default_admin_user
+#     ansible_become_password: *default_become_password
+#     ansible_ssh_user: *default_admin_user
+#   kss:
+#     admin_base_homedir: *default_admin_base_homedir
+#     admin_gecos: *default_admin_gecos
+#     admin_password: kss-admin-hashed-password
+#     admin_ssh_key: kss-admin-ssh-key
+#     admin_user: *default_admin_user
+#     ansible_become_password: kss-become
 env_default_userdata:
   kss:
     apt:
@@ -68,7 +90,101 @@ env_default_userdata:
       lock_passwd: true
       shell: /bin/bash
       ssh_authorized_keys:
-      - no-agent-forwarding,no-port-forwarding {{ env_default_params['kss']['admin_ssh_key_userdata'] }}
+      - no-agent-forwarding,no-port-forwarding {{ env_default_params['kss']['admin_ssh_key'] }}
     write_files: "{{ role_write_files }}"
     # So lookups don't error when we aren't handling userdata
+env_domain_addresses:
+  bare_metal:
+    v4addr: "{{ ansible_facts['default_ipv4']['address'] }}"
+    v4prefix: "{{ ansible_facts['default_ipv4']['address'] }}"
+    v6addr: "{{ host_local_ipv6_addr | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
+    v6prefix: "{{ host_local_ipv6_prefix | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
+    v6gateway: "{{ host_local_ipv6_gateway | default(ansible_facts['default_ipv6']['gateway']) | default(None) }}"
+  kss: "{{ vault_env_domain_addresses['kss'] }}"
+  # Example of data structures in vault
+  #   airlockkss:
+  #     mac: 52:54:00:72:3f:a7
+  #     v4addr: 192.168.75.40
+  #     v4prefix: 24
+  #     v6addr: fdc8:71c:e980:1000::2a
+  #     v6prefix: 64
+  #   gatekss:
+  #     mac: 52:54:00:d7:86:e4
+  #     v4addr: 192.168.75.12
+  #     v4prefix: 24
+  #     v6addr: fdc8:71c:e980:1000::0c
+  #     v6prefix: 64
+env_domain_creation_params:
+  kss:
+  - guest: airlockkss
+    meta_data_change_id: kss-01-00
+    memory: 512
+    pool_os: default
+    ssh_port: "{{ vault_env_domain_creation_params['kss']['airlockkss']['ssh_port'] }}"
+    vcpu: 1
+    vol_name_os: airlockkss_os.qcow2
+    vol_size_os: 8G
+  - guest: gatekss
+    meta_data_change_id: kss-01-00
+    memory: 6144
+    pool_os: default
+    vcpu: 2
+    vol_name_os: gatekss_os.qcow2
+    vol_size_os: 8G
+  - guest: gdavkss
+    data_volumes:
+    - name: gdavsogo.qcow2
+      pool: default
+      vol_size: 40G
+    - name: gdavpsql.qcow2
+      pool: default
+      vol_size: 10G
+    meta_data_change_id: kss-01-00
+    memory: 4096
+    pool_os: default
+    vcpu: 2
+    vol_name_os: gdavkss_os.qcow2
+    vol_size_os: 8G
+  - guest: imapkss
+    data_volumes:
+    - name: maildata.qcow2
+      pool: default
+      vol_size: 40G
+    libvirt_domain_name: imapkss
+    meta_data_change_id: kss-01-00
+    memory: 2048
+    pool_os: default
+    vcpu: 2
+    vol_name_os: imapkss_os.qcow2
+  - guest: smtp01kss
+    data_volumes:
+    - name: smtp01data.qcow2
+      pool: default
+      vol_size: 10G
+    meta_data_change_id: kss-01-00
+    memory: 4096
+    pool_os: default
+    vcpu: 2
+    vol_name_os: smtp01kss_os.qcow2
+    vol_size_os: 8G
+  - guest: wwwkss
+    data_volumes:
+    - name: wwwdata.qcow2
+      pool: default
+      vol_size: 60G
+    meta_data_change_id: kss-01-00
+    memory: 2048
+    pool_os: default
+    vcpu: 2
+    vol_name_os: wwwkss_os.qcow2
+    vol_size_os: 8G
+env_domain_forwards: "{{ vault_env_domain_forwards }}"
+# Examples of vault data structure
+#   kss:
+#   - guest: airlockkss
+#     guest_port: &airlock_ssh_port 777
+#     host_port: *airlock_ssh_port
+#   - guest: smtp01kss
+#     guest_port: &backupmx_port 25555
+#     host_port: *backupmx_port
 ...
