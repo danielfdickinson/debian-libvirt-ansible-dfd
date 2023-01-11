@@ -9,6 +9,6 @@ task list for a service / package)
 * Clean up variable usage
 * Make roles usable standalone
 * What to do about encrypting data?
-	* The problem is autorestarting in the case OVH needs to intervene (for
-	example of the monitoring indicates non-responsiveness), which at least at
+	* An issue is autorestarting in the case OVH needs to intervene (for
+	example if the monitoring indicates non-responsiveness), which at least at
 	first is a reboot.

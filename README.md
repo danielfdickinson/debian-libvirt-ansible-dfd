@@ -33,6 +33,17 @@ TBD
 
 TBD
 
+## Bare metal environment
+
+### Hosts
+
+dlcicl01.thecshore.ca
+
+### Virtual environments
+
+* ldev.thecshore.ca on dlcicl01.thecshore.ca
+	* airlockldev.ldev.thecshore.ca
+
 ## Getting help, discussing, and/or modifying
 
 TBD
