@@ -212,7 +212,7 @@
     - "{{ envname }}"
     - add
     - ip-dhcp-host
-    - <host ip='{{ addrdata.v4addr }}' mac='{{ addrdata.mac }}' name="{{ item.usedata.hostname }}" />
+    - <host ip='{{ addrdata.v4addr }}' mac='{{ addrdata.mac }}' name="{{ item.userdata.hostname }}" />
     - --parent-index
     - 0
     - --live

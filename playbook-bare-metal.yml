@@ -42,7 +42,7 @@
   - backup_ovh
   - backup_restic
 
-- name: Add Libvirt, guests, and enable Fail2Ban
+- name: Add Libvirt and enable fail2ban
   hosts: bare_metal:&libvirtd_hosts
   roles:
   - service_libvirtd
