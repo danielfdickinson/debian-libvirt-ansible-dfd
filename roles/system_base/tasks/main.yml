@@ -2,6 +2,7 @@
 # Even though this is package-specific config it does not belong to the tmux
 # package role because it is also a vendor (us) configuration
 - name: Configure tmux for new users
+  become: yes
   ansible.builtin.copy:
     dest: /etc/skel/.tmux.conf
     group: root
@@ -9,7 +10,6 @@
     owner: root
     src: .tmux.conf
 - name: Configure tmux for local admin
-  # Note that admin_user is assumed to be added by userdata
   become: no
   ansible.builtin.copy:
     dest: "{{ admin_base_homedir }}/{{ admin_user }}/.tmux.conf"
