@@ -39,4 +39,9 @@
     - meta-data
     - "::"
     chdir: "{{ item.path | dirname }}"
+- name: Reload apparmor
+  become: yes
+  ansible.builtin.service:
+    name: apparmor
+    state: reloaded
 ...

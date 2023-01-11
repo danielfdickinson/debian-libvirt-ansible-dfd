@@ -1,14 +1,5 @@
 ---
-- name: Workaround '#1' for Apparmor issue with Libvirt extra pools under images
-  become: yes
-  ansible.builtin.copy:
-    dest: /etc/apparmor.d/local/abstractions/libvirt-qemu
-    content: /var/lib/libvirt/images/** rwk,
-    group: root
-    mode: "0644"
-    owner: root
-  notify: Reload apparmor
-- name: Workaround '#2' for Apparmor issue with Libvirt extra pools under images
+- name: Workaround for Apparmor issue with Libvirt extra pools under images
   become: yes
   ansible.builtin.template:
     dest: /etc/apparmor.d/local/libvirt.virt-aa-helper

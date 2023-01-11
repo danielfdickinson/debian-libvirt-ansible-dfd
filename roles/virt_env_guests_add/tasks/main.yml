@@ -1,4 +1,13 @@
 ---
+- name: Workaround for Apparmor issue with Libvirt base images
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/apparmor.d/local/abstractions/libvirt-qemu
+    content: /var/lib/libvirt/images/** rwk,
+    group: root
+    mode: "0644"
+    owner: root
+  notify: Reload apparmor
 - name: Copy base OS volume file to libvirtd host
   become: yes
   # We use 'get_url' since we're often operating on remote hosts and our upload
