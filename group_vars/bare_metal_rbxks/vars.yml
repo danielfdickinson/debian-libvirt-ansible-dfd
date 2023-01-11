@@ -124,6 +124,13 @@ env_domain_creation_params:
     vcpu: 1
     vol_name_os: airlockkss_os.qcow2
     vol_size_os: 8G
+    userdata:
+      fqdn: airlockkss.kss.thecshore.ca
+      hostname: airlockkss
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
   - guest: gatekss
     meta_data_change_id: kss-01-00
     memory: 6144
@@ -131,6 +138,13 @@ env_domain_creation_params:
     vcpu: 2
     vol_name_os: gatekss_os.qcow2
     vol_size_os: 8G
+    userdata:
+      fqdn: gatekss.kss
+      hostname: gatekss
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
   - guest: gdavkss
     data_volumes:
     - name: gdavsogo.qcow2
@@ -145,6 +159,27 @@ env_domain_creation_params:
     vcpu: 2
     vol_name_os: gdavkss_os.qcow2
     vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/lib/postgresql]
+      - [mkdir, -p, /var/spool/sogo]
+      disk_setups:
+        /dev/vdc: ["100"]
+        /dev/vdd: ["100"]
+      fqdn: gdavkss.kss
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+        "/dev/vdd":
+        - "1"
+      hostname: gdavkss
+      mounts:
+      - [/dev/vdc1, /var/lib/postgresql]
+      - [/dev/vdd1, /var/spool/sogo]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
   - guest: imapkss
     data_volumes:
     - name: maildata.qcow2
@@ -157,6 +192,22 @@ env_domain_creation_params:
     vcpu: 2
     vol_name_os: imapkss_os.qcow2
     vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/vmail]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: imapkss.kss
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: imapkss
+      mounts:
+      - [/dev/vdc1, /var/vmail]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
   - guest: smtp01kss
     data_volumes:
     - name: smtp01data.qcow2
@@ -168,6 +219,22 @@ env_domain_creation_params:
     vcpu: 2
     vol_name_os: smtp01kss_os.qcow2
     vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/spool/postfix]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: smtp01kss.kss
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: smtp01kss
+      mounts:
+      - [/dev/vdc1, /var/spool/postfix]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
   - guest: wwwkss
     data_volumes:
     - name: wwwdata.qcow2
@@ -179,6 +246,22 @@ env_domain_creation_params:
     vcpu: 2
     vol_name_os: wwwkss_os.qcow2
     vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/www]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: wwwkss.kss
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: wwwkss
+      mounts:
+      - [/dev/vdc1, /var/www]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
 env_domain_forwards: "{{ vault_env_domain_forwards }}"
 # Examples of vault data structure
 #   kss:
