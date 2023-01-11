@@ -33,6 +33,17 @@ TBD
 
 TBD
 
+## Bare metal environment
+
+### Hosts
+
+cbay02.thecshore.ca
+
+### Virtual environments
+
+* kss.thecshore.ca on cbay02.thecshore.ca
+	* airlockkss.kss.thecshore.ca
+
 ## Getting help, discussing, and/or modifying
 
 TBD
