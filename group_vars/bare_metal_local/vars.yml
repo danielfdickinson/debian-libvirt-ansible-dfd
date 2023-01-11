@@ -3,7 +3,6 @@ admin_base_homedir: "{{ vault_admin_base_homedir }}"
 admin_gecos: "{{ vault_admin_gecos }}"
 admin_password: "{{ vault_admin_password }}"
 admin_ssh_key: "{{ vault_admin_ssh_key }}"
-admin_ssh_key_userdata: "{{ vault_admin_ssh_key_userdata }}"
 admin_user: "{{ vault_admin_user }}"
 ansible_become_password: "{{ vault_ansible_become_password }}"
 ansible_ssh_host_key_checking: false # Note: this should be true in production
@@ -74,7 +73,7 @@ env_default_userdata:
       lock_passwd: true
       shell: /bin/bash
       ssh_authorized_keys:
-      - no-agent-forwarding,no-port-forwarding {{ env_default_params['ldev']['admin_ssh_key_userdata'] }}
+      - no-agent-forwarding,no-port-forwarding {{ env_default_params['ldev']['admin_ssh_key'] }}
     write_files: "{{ role_write_files }}"
     # So lookups don't error when we aren't handling userdata
 ...
