@@ -26,6 +26,7 @@ v6natnet_ula: "{{ vault_v6natnet_ula | default(None) }}"
 env_config_net:
   kss:
     net_domain: kss
+    ssh_port: 22
     v4nat_addr: 192.168.76.1
     v4nat_dhcp_start: 192.168.76.33
     v4nat_dhcp_end: 192.168.76.248
@@ -63,8 +64,8 @@ env_default_userdata:
     - sudonp
     - sys
     ntp_servers:
-    - "{{ vault_env_config_net['kss']['v4nat_addr'] }}"
-    - "{{ vault_env_config_net['kss']['v6nat_addr'] }}"
+    - "{{ env_config_net['kss']['v4nat_addr'] }}"
+    - "{{ env_config_net['kss']['v6nat_addr'] }}"
     packages:
     - molly-guard
     - powermgmt-base
