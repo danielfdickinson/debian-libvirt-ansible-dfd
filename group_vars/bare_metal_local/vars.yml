@@ -71,8 +71,8 @@ env_default_userdata:
     - sudonp
     - sys
     ntp_servers:
-    - "{{ vault_env_config_net['ldev']['v4nat_addr'] }}"
-    - "{{ vault_env_config_net['ldev']['v6nat_addr'] }}"
+    - "{{ env_config_net['ldev']['v4nat_addr'] }}"
+    - "{{ env_config_net['ldev']['v6nat_addr'] }}"
     packages:
     - molly-guard
     - powermgmt-base
