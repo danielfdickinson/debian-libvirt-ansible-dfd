@@ -156,6 +156,7 @@ env_domain_creation_params:
     pool_os: default
     vcpu: 2
     vol_name_os: imapkss_os.qcow2
+    vol_size_os: 8G
   - guest: smtp01kss
     data_volumes:
     - name: smtp01data.qcow2
