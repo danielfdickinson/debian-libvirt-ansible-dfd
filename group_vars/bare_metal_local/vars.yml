@@ -8,11 +8,6 @@ ansible_become_password: "{{ vault_ansible_become_password }}"
 ansible_ssh_host_key_checking: false # Note: this should be true in production
 ansible_ssh_port: "{{ vault_ansible_ssh_port }}"
 ansible_ssh_user: "{{ vault_ansible_ssh_user }}"
-env_config_net: "{{ vault_env_config_net }}"
-env_default_params: "{{ vault_env_default_params }}"
-env_domain_addresses: "{{ vault_env_domain_addresses }}"
-env_domain_creation_params: "{{ vault_env_domain_creation_params }}"
-env_domain_forwards: "{{ vault_env_domain_forwards }}"
 fallback_dns: "{{ vault_fallback_dns }}"
 libvirt_client_ssh_key: "{{ vault_libvirt_client_ssh_key }}"
 libvirt_client_user: "{{ vault_libvirt_client_user }}"
@@ -35,6 +30,36 @@ storage_mountpoints: "{{ host_storage_mountpoints | default(None) }}"
 storage_mounts: "{{ host_storage_mounts | default(None) }}"
 storage_volume_groups: "{{ host_storage_volume_groups | default(None) }}"
 v6natnet_ula: "{{ vault_v6natnet_ula | default(None) }}"
+env_config_net:
+  ldev:
+    net_domain: ldev
+    ssh_port: 22
+    v4nat_addr: 192.168.75.1
+    v4nat_dhcp_start: 192.168.75.33
+    v4nat_dhcp_end: 192.168.75.248
+    v4nat_net: 192.168.75.0
+    v4nat_prefix: 24
+    v6nat_addr: fdc8:71c:e980:1000::1
+    v6nat_net: "fdc8:71c:e980:1000::"
+    v6nat_prefix: 64
+    vbridge: virbr1
+env_default_params: "{{ vault_env_default_params }}"
+# In the vault you could have:
+#   bare_metal:
+#     admin_base_homedir: *default_admin_base_homedir
+#     admin_gecos: *default_admin_gecos
+#     admin_password: *default_admin_password
+#     admin_ssh_key: *default_admin_ssh_key
+#     admin_user: *default_admin_user
+#     ansible_become_password: *default_become_password
+#     ansible_ssh_user: *default_admin_user
+#   ldev:
+#     admin_base_homedir: *default_admin_base_homedir
+#     admin_gecos: *default_admin_gecos
+#     admin_password: ldev-admin-hashed-password
+#     admin_ssh_key: ldev-admin-ssh-key
+#     admin_user: *default_admin_user
+#     ansible_become_password: ldev-become
 env_default_userdata:
   ldev:
     apt:
@@ -76,4 +101,184 @@ env_default_userdata:
       - no-agent-forwarding,no-port-forwarding {{ env_default_params['ldev']['admin_ssh_key'] }}
     write_files: "{{ role_write_files }}"
     # So lookups don't error when we aren't handling userdata
+env_domain_addresses:
+  bare_metal:
+    v4addr: "{{ ansible_facts['default_ipv4']['address'] }}"
+    v4prefix: "{{ ansible_facts['default_ipv4']['address'] }}"
+    v6addr: "{{ host_local_ipv6_addr | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
+    v6prefix: "{{ host_local_ipv6_prefix | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
+    v6gateway: "{{ host_local_ipv6_gateway | default(ansible_facts['default_ipv6']['gateway']) | default(None) }}"
+  ldev: "{{ vault_env_domain_addresses['ldev'] }}"
+  # Example of data structures in vault
+  #   airlockldev:
+  #     mac: 52:54:00:72:3f:a7
+  #     v4addr: 192.168.75.40
+  #     v4prefix: 24
+  #     v6addr: fdc8:71c:e980:1000::2a
+  #     v6prefix: 64
+  #   gateldev:
+  #     mac: 52:54:00:d7:86:e4
+  #     v4addr: 192.168.75.12
+  #     v4prefix: 24
+  #     v6addr: fdc8:71c:e980:1000::0c
+  #     v6prefix: 64
+env_domain_creation_params:
+  ldev:
+  - guest: airlockldev
+    meta_data_change_id: ldev-01-00
+    memory: 512
+    pool_os: fast
+    ssh_port: "{{ vault_env_domain_creation_params['ldev']['airlockldev']['ssh_port'] }}"
+    vcpu: 1
+    vol_name_os: airlockldev_os.qcow2
+    vol_size_os: 8G
+    userdata:
+      fqdn: airlockldev.ldev.thecshore.ca
+      hostname: airlockldev
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+  - guest: gateldev
+    meta_data_change_id: ldev-01-00
+    memory: 6144
+    pool_os: fast
+    vcpu: 2
+    vol_name_os: gateldev_os.qcow2
+    vol_size_os: 8G
+    userdata:
+      fqdn: gateldev.ldev
+      hostname: gateldev
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+  - guest: gdavldev
+    data_volumes:
+    - name: gdavsogo.qcow2
+      pool: slow
+      vol_size: 40G
+    - name: gdavpsql.qcow2
+      pool: slow
+      vol_size: 10G
+    meta_data_change_id: ldev-01-00
+    memory: 4096
+    pool_os: fast
+    vcpu: 2
+    vol_name_os: gdavldev_os.qcow2
+    vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/lib/postgresql]
+      - [mkdir, -p, /var/spool/sogo]
+      disk_setups:
+        /dev/vdc: ["100"]
+        /dev/vdd: ["100"]
+      fqdn: gdavldev.ldev
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+        "/dev/vdd":
+        - "1"
+      hostname: gdavldev
+      mounts:
+      - [/dev/vdc1, /var/lib/postgresql]
+      - [/dev/vdd1, /var/spool/sogo]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+  - guest: imapldev
+    data_volumes:
+    - name: maildata.qcow2
+      pool: slow
+      vol_size: 40G
+    libvirt_domain_name: imapldev
+    meta_data_change_id: ldev-01-00
+    memory: 2048
+    pool_os: fast
+    vcpu: 2
+    vol_name_os: imapldev_os.qcow2
+    vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/vmail]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: imapldev.ldev
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: imapldev
+      mounts:
+      - [/dev/vdc1, /var/vmail]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+  - guest: smtp01ldev
+    data_volumes:
+    - name: smtp01data.qcow2
+      pool: slow
+      vol_size: 10G
+    meta_data_change_id: ldev-01-00
+    memory: 4096
+    pool_os: fast
+    ssh_port: 22
+    vcpu: 2
+    vol_name_os: smtp01ldev_os.qcow2
+    vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/spool/postfix]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: smtp01ldev.ldev
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: smtp01ldev
+      mounts:
+      - [/dev/vdc1, /var/spool/postfix]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+  - guest: wwwldev
+    data_volumes:
+    - name: wwwdata.qcow2
+      pool: fast
+      vol_size: 60G
+    meta_data_change_id: ldev-01-00
+    memory: 2048
+    pool_os: fast
+    ssh_port: 22
+    vcpu: 2
+    vol_name_os: wwwldev_os.qcow2
+    vol_size_os: 8G
+    userdata:
+      bootcmd:
+      - [mkdir, -p, /var/www]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: wwwldev.ldev
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: wwwldev
+      mounts:
+      - [/dev/vdc1, /var/www]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+env_domain_forwards: "{{ vault_env_domain_forwards }}"
+# Examples of vault data structure
+#   ldev:
+#   - guest: airlockldev
+#     guest_port: &airlock_ssh_port 777
+#     host_port: *airlock_ssh_port
+#   - guest: smtp01ldev
+#     guest_port: &backupmx_port 25555
+#     host_port: *backupmx_port
 ...

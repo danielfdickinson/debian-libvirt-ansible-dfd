@@ -106,6 +106,7 @@ gateldev
 gdav
 gdavkss
 gdavldev
+gdavpsql
 gecos
 genparam
 genpkey
