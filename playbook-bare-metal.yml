@@ -56,6 +56,7 @@
 
 - name: Add NUT to local bare-metal
   hosts: bare_metal:&bare_metal_local
-  roles:
-  - service_upsd
+  tasks:
+  - name: Execute nut_netclient
+    include_role: maxhoesel.nut_netclient
 ...

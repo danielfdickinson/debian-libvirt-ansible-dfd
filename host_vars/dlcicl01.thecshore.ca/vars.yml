@@ -15,10 +15,11 @@ host_storage_logical_volumes: "{{ vault_host_storage_logical_volumes }}"
 host_storage_mountpoints: "{{ vault_host_storage_mountpoints }}"
 host_storage_mounts: "{{ vault_host_storage_mounts }}"
 host_storage_volume_groups: "{{ vault_host_storage_volume_groups }}"
-host_ups_name: "{{ vault_host_ups_name }}"
-host_upsd_host: "{{ vault_host_upsd_host }}"
-host_upsd_password: "{{ vault_host_upsd_password }}"
-host_upsd_user: "{{ vault_host_upsd_user }}"
-host_upsmon_type: "{{ vault_host_upsmon_type }}"
+nut_netclient_monitors:
+- system: "{{vault_host_ups_name }}@{{ vault_host_upsd_host }}"
+  password: "{{ vault_host_upsd_password }}"
+  powervalue: 1
+  username: "{{ vault_host_upsd_user }}"
+  type: "{{ vault_host_upsmon_type }}"
 host_vbridge: "{{ vault_host_vbridge }}"
 ...
