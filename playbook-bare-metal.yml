@@ -30,6 +30,7 @@
   - danielfdickinson.system_base_debian.dfd_base_misc
   - danielfdickinson.system_base_debian.ufw
   - packages_firmware
+  - packages_hardware
 
 - name: Configure restic backup for local instances
   hosts: bare_metal:&backup_clients:&dfd_local
