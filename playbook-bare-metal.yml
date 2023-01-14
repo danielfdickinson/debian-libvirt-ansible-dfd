@@ -27,8 +27,8 @@
 - name: Add base and hardware packages
   hosts: bare_metal
   roles:
-  - system_base
-  - packages_base
+  - danielfdickinson.system_base_debian.dfd_base_misc
+  - danielfdickinson.system_base_debian.ufw
   - packages_firmware
 
 - name: Configure restic backup for local instances
