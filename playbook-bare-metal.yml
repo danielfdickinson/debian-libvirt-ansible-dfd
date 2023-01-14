@@ -55,8 +55,8 @@
   - service_libvirtd_pools
 
 - name: Add NUT to local bare-metal
+  become: yes
   hosts: bare_metal:&bare_metal_local
-  tasks:
-  - name: Execute nut_netclient
-    include_role: maxhoesel.nut_netclient
+  roles:
+  - maxhoesel.nut_netclient
 ...
