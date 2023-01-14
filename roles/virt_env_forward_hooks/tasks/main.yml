@@ -1,4 +1,10 @@
 ---
+- name: Ensure UFW present
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - ufw
+    state: present
 - name: Make Libvirt qemu hook parts directory
   become: yes
   ansible.builtin.file:
