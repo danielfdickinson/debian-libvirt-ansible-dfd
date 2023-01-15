@@ -30,7 +30,13 @@
   - danielfdickinson.system_base_debian.dfd_base_misc
   - danielfdickinson.system_base_debian.ufw
   - danielfdickinson.system_base_debian.firmware_install
-  - packages_hardware
+  tasks:
+  - name: Ensure smartmontools is installed
+    become: yes
+    ansible.builtin.apt:
+      name:
+      - smartmontools
+      state: present
   vars:
     firmware_extra:
     - firmware-realtek
