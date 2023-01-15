@@ -53,7 +53,7 @@
   notify: Refresh list of volumes in {{ item['pool_os'] }} pool
   when: item.vol_name_os not in (libvirt_os_pool_vol_list.results | map(attribute='stdout_lines') | flatten | unique)
 - name: Create data volumes for instances
-  include_tasks: create_data_volumes.yml
+  ansible.builtin.include_tasks: create_data_volumes.yml
   loop: "{{ env_domain_creation_params[envname] | selectattr('data_volumes', 'defined') | map(attribute='data_volumes') | flatten(1) }}"
   loop_control:
     label: "{{ item.name }} in {{ item.pool }}"
