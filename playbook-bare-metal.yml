@@ -29,8 +29,11 @@
   roles:
   - danielfdickinson.system_base_debian.dfd_base_misc
   - danielfdickinson.system_base_debian.ufw
-  - packages_firmware
+  - danielfdickinson.system_base_debian.firmware_install
   - packages_hardware
+  vars:
+    firmware_extra:
+    - firmware-realtek
 
 - name: Configure restic backup for local instances
   hosts: bare_metal:&backup_clients:&dfd_local
