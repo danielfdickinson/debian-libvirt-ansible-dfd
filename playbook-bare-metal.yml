@@ -42,17 +42,6 @@
     firmware_extra:
     - firmware-realtek
 
-- name: Configure restic backup for local instances
-  hosts: bare_metal:&backup_clients:&dfd_local
-  roles:
-  - backup_restic
-
-- name: Configure restic backup for OVH (BHS) instances
-  hosts: bare_metal:&backup_clients:&ovh_bhs
-  roles:
-  - backup_ovh
-  - backup_restic
-
 - name: Add libvirt and a user for remote libvirt access
   hosts: bare_metal:&libvirtd_hosts
   roles:
