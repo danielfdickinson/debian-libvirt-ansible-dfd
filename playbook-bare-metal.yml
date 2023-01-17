@@ -30,7 +30,9 @@
   - danielfdickinson.system_base_debian.dfd_base_misc
   - danielfdickinson.system_base_debian.ufw
   - danielfdickinson.system_base_debian.fail2ban
-  - danielfdickinson.system_base_debian.firmware_install
+  - role: danielfdickinson.system_base_debian.firmware_install
+    firmware_extra:
+    - firmware-realtek
   tasks:
   - name: Ensure smartmontools is installed
     become: yes
@@ -38,15 +40,17 @@
       name:
       - smartmontools
       state: present
-  vars:
-    firmware_extra:
-    - firmware-realtek
 
 - name: Add libvirt and a user for remote libvirt access
   hosts: bare_metal:&libvirtd_hosts
   roles:
   - service_libvirtd
-  - user_libvirt_client_add
+  - role: danielfdickinson.system_base_debian.user_add_other_base
+    new_base_homedir: "{{ admin_base_homedir }}"
+    new_user: "{{ libvirt_client_user}}"
+    new_user_ssh_key: "{{ libvirt_client_ssh_key }}"
+    new_users_groups:
+    - libvirt
 
 - name: Add split libvirt pools on certain hosts
   hosts: bare_metal:&libvirtd_split_pools

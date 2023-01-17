@@ -19,13 +19,12 @@
   hosts: bare_metal
   gather_facts: true
   roles:
-  - user_admin_add
-  vars:
-    new_admin_base_homedir: "{{ admin_base_homedir }}"
-    new_admin_gecos: "{{ admin_gecos }}"
+  - role: danielfdickinson.system_base_debian.user_admin
+    new_base_homedir: "{{ admin_base_homedir }}"
     new_admin_password: "{{ vault_admin_password }}"
     new_admin_ssh_key: "{{ vault_admin_ssh_key }}"
     new_admin_user: "{{ vault_admin_user }}"
+  vars:
     ansible_ssh_port: "{{ initial_ssh_port }}"
     ansible_become_password: "{{ initial_password }}"
     ansible_ssh_user: "{{ initial_ssh_user }}"
