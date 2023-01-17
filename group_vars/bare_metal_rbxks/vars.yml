@@ -98,10 +98,10 @@ env_default_userdata:
 env_domain_addresses:
   bare_metal:
     v4addr: "{{ ansible_facts['default_ipv4']['address'] }}"
-    v4prefix: "{{ ansible_facts['default_ipv4']['address'] }}"
-    v6addr: "{{ host_local_ipv6_addr | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
-    v6prefix: "{{ host_local_ipv6_prefix | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
-    v6gateway: "{{ host_local_ipv6_gateway | default(ansible_facts['default_ipv6']['gateway']) | default(None) }}"
+    v4prefix: "{{ ansible_facts['default_ipv4']['prefix'] }}"
+    v6addr: "{{ host_local_ipv6_addr | default(ansible_facts['default_ipv6']['address']) | default(null) }}"
+    v6prefix: "{{ host_local_ipv6_prefix | default(ansible_facts['default_ipv6']['prefix']) | default(null) }}"
+    v6gateway: "{{ host_local_ipv6_gateway | default(ansible_facts['default_ipv6']['gateway']) | default(null) }}"
   kss: "{{ vault_env_domain_addresses['kss'] }}"
   # Example of data structures in vault
   #   airlockkss:
@@ -129,10 +129,7 @@ env_domain_creation_params:
     userdata:
       fqdn: airlockkss.kss.thecshore.ca
       hostname: airlockkss
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: gatekss
     meta_data_change_id: kss-01-00
     memory: 6144
@@ -143,10 +140,7 @@ env_domain_creation_params:
     userdata:
       fqdn: gatekss.kss
       hostname: gatekss
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: gdavkss
     data_volumes:
     - name: gdavsogo.qcow2
@@ -178,10 +172,7 @@ env_domain_creation_params:
       mounts:
       - [/dev/vdc1, /var/lib/postgresql]
       - [/dev/vdd1, /var/spool/sogo]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: imapkss
     data_volumes:
     - name: maildata.qcow2
@@ -206,10 +197,7 @@ env_domain_creation_params:
       hostname: imapkss
       mounts:
       - [/dev/vdc1, /var/vmail]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: smtp01kss
     data_volumes:
     - name: smtp01data.qcow2
@@ -233,10 +221,7 @@ env_domain_creation_params:
       hostname: smtp01kss
       mounts:
       - [/dev/vdc1, /var/spool/postfix]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: wwwkss
     data_volumes:
     - name: wwwdata.qcow2
@@ -260,10 +245,7 @@ env_domain_creation_params:
       hostname: wwwkss
       mounts:
       - [/dev/vdc1, /var/www]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
 env_domain_forwards: "{{ vault_env_domain_forwards }}"
 # Examples of vault data structure
 #   kss:
