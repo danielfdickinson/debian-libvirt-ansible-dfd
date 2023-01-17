@@ -105,10 +105,10 @@ env_default_userdata:
 env_domain_addresses:
   bare_metal:
     v4addr: "{{ ansible_facts['default_ipv4']['address'] }}"
-    v4prefix: "{{ ansible_facts['default_ipv4']['address'] }}"
-    v6addr: "{{ host_local_ipv6_addr | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
-    v6prefix: "{{ host_local_ipv6_prefix | default(ansible_facts['default_ipv6']['address']) | default(None) }}"
-    v6gateway: "{{ host_local_ipv6_gateway | default(ansible_facts['default_ipv6']['gateway']) | default(None) }}"
+    v4prefix: "{{ ansible_facts['default_ipv4']['prefix'] }}"
+    v6addr: "{{ host_local_ipv6_addr | default(ansible_facts['default_ipv6']['address']) | default(null) }}"
+    v6prefix: "{{ host_local_ipv6_prefix | default(ansible_facts['default_ipv6']['prefix']) | default(null) }}"
+    v6gateway: "{{ host_local_ipv6_gateway | default(ansible_facts['default_ipv6']['gateway']) | default(null) }}"
   ldev: "{{ vault_env_domain_addresses['ldev'] }}"
   # Example of data structures in vault
   #   airlockldev:
@@ -136,10 +136,7 @@ env_domain_creation_params:
     userdata:
       fqdn: airlockldev.ldev.thecshore.ca
       hostname: airlockldev
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: gateldev
     meta_data_change_id: ldev-01-00
     memory: 6144
@@ -150,10 +147,7 @@ env_domain_creation_params:
     userdata:
       fqdn: gateldev.ldev
       hostname: gateldev
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: gdavldev
     data_volumes:
     - name: gdavsogo.qcow2
@@ -185,10 +179,7 @@ env_domain_creation_params:
       mounts:
       - [/dev/vdc1, /var/lib/postgresql]
       - [/dev/vdd1, /var/spool/sogo]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: imapldev
     data_volumes:
     - name: maildata.qcow2
@@ -213,10 +204,7 @@ env_domain_creation_params:
       hostname: imapldev
       mounts:
       - [/dev/vdc1, /var/vmail]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: smtp01ldev
     data_volumes:
     - name: smtp01data.qcow2
@@ -241,10 +229,7 @@ env_domain_creation_params:
       hostname: smtp01ldev
       mounts:
       - [/dev/vdc1, /var/spool/postfix]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
   - guest: wwwldev
     data_volumes:
     - name: wwwdata.qcow2
@@ -269,10 +254,7 @@ env_domain_creation_params:
       hostname: wwwldev
       mounts:
       - [/dev/vdc1, /var/www]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+      packages: []
 env_domain_forwards: "{{ vault_env_domain_forwards }}"
 # Examples of vault data structure
 #   ldev:
