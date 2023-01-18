@@ -22,6 +22,15 @@
     owner: root
     src: hooks-qemu-main
   notify: Restart libvirtd
+- name: List existing port forward hooks
+  ansible.builtin.find:
+    file_type: file
+    path: /etc/libvirt-forward-hooks.d
+    patterns:
+    - "[a-zA-Z0-9-_]+_[0-9]+to[[0-9]+\\.hook"
+    use_regex: true
+  register: existing_hooks_out
+  changed_when: false
 - name: Add ipv4 and ipv6 port forward hooks
   become: yes
   ansible.builtin.template:
@@ -38,6 +47,13 @@
   loop: "{{ domain_forwards }}"
   loop_control:
     label: host:{{ item.host_port }} => {{ item.guest }}:{{ item.guest_port }}
+- name: Remove no longer wanted hooks
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: "{{ (item not in new_hooks) | ternary('absent', 'file') }}"
+  loop: "{{ existing_hooks_out.files | map(attribute='path') }}"
+  vars:
+    new_hooks: "{{ hooks_qemu_result.results | map(attribute='dest') | flatten | unique }}"
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 ...
