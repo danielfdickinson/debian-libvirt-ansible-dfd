@@ -1,10 +1,5 @@
 # To Do
 
-* Install UFW as dependency not as a separate task (should not be in a
-task list for a service / package)
-* Configure backups
-* Add backupmx role in a separate environment
-* Refactor large roles to better separate concerns by splitting up the roles
 * Check ansible-galaxy for potentially useful roles
 * Clean up variable usage
 * Make roles usable standalone

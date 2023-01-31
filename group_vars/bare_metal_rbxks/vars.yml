@@ -11,9 +11,9 @@ ansible_ssh_user: "{{ vault_ansible_ssh_user }}"
 fallback_dns: "{{ vault_fallback_dns }}"
 libvirt_client_ssh_key: "{{ vault_libvirt_client_ssh_key }}"
 libvirt_client_user: "{{ vault_libvirt_client_user }}"
-libvirt_os_base_image_name: debian-11-generic-amd64-20221219-1234.qcow2
-libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/SHA512SUMS"
-libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
+libvirt_os_base_image_name: debian-11-generic-amd64-20220124-1270.qcow2
+libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20230124-1270/SHA512SUMS"
+libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20230124-1270/debian-11-generic-amd64-20230124-1270.qcow2"
 libvirt_pool_base_images: "{{ host_libvirt_pool_base_images }}"
 libvirt_pool_base_images_path: "{{ host_libvirt_pool_base_images_path }}"
 libvirt_pool_cloud_init: "{{ host_libvirt_pool_cloud_init }}"
@@ -39,14 +39,6 @@ env_config_net:
     vbridge: virbr1
 env_default_params: "{{ vault_env_default_params }}"
 # In the vault you could have:
-#   bare_metal:
-#     admin_base_homedir: *default_admin_base_homedir
-#     admin_gecos: *default_admin_gecos
-#     admin_password: *default_admin_password
-#     admin_ssh_key: *default_admin_ssh_key
-#     admin_user: *default_admin_user
-#     ansible_become_password: *default_become_password
-#     ansible_ssh_user: *default_admin_user
 #   kss:
 #     admin_base_homedir: *default_admin_base_homedir
 #     admin_gecos: *default_admin_gecos
