@@ -6,6 +6,11 @@
   - danielfdickinson.system_base_debian.network_hosts_file
   - network_resolved
 
+- name: Make second interface a bridge
+  hosts: bare_metal:&bridge_second_interface
+  roles:
+  - network_bridge_second_interface
+
 - name: Add local ipv6 when no internet-ipv6 available
   hosts: bare_metal:&local_ipv6
   roles:
@@ -13,11 +18,6 @@
   vars:
     local_ipv6_cidr: "{{ env_domain_addresses['bare_metal']['v6addr'] }}/{{ env_domain_addresses['bare_metal']['v6prefix'] }}"
     local_ipv6_gateway: "{{ env_domain_addresses['bare_metal']['v6gateway'] }}"
-
-- name: Make second interface a bridge
-  hosts: bare_metal:&bridge_second_interface
-  roles:
-  - network_bridge_second_interface
 
 - name: Setup additional storage
   hosts: bare_metal:&storage_extra
