@@ -13,6 +13,10 @@
 
 - name: Add local ipv6 when no internet-ipv6 available
   hosts: bare_metal:&local_ipv6
+  gather_facts: true
+  pre_tasks:
+  - name: Gather facts (primary interface may have changed)
+    ansible.builtin.setup:
   roles:
   - network_ipv6
   vars:
@@ -26,6 +30,10 @@
 
 - name: Add base and hardware packages
   hosts: bare_metal
+  gather_facts: true
+  pre_tasks:
+  - name: Gather facts (primary interface may have changed)
+    ansible.builtin.setup:
   roles:
   - danielfdickinson.system_base_debian.dfd_base_misc
   - danielfdickinson.system_base_debian.ufw
