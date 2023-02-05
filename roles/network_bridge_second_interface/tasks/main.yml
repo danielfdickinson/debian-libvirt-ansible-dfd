@@ -7,6 +7,14 @@
     group: root
     mode: "0644"
     owner: root
+- name: Prevent using cloud-init generated interfaces snippets
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/network/interfaces
+    group: root
+    mode: "0644"
+    owner: root
+    src: interfaces
 - name: Install bridge utilities
   become: yes
   ansible.builtin.apt:
