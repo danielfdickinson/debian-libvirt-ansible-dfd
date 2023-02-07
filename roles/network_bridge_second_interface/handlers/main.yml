@@ -6,10 +6,11 @@
     name: ifup@{{ second_interface }}
     enabled: false
     state: stopped
-- name: Restart networking to enable br1
+- name: Reboot to ensure network correctly refreshed
   listen: Restart networking to start br1
   become: yes
-  ansible.builtin.systemd:
-    name: networking
-    state: restarted
+  ansible.builtin.reboot:
+    search_paths:
+    - /usr/sbin
+    - /lib/molly-guard
 ...

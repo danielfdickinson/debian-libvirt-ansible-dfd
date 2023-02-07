@@ -255,6 +255,7 @@ tlsmgr
 tlsproxy
 tlsv
 tmpl
+udev
 unauth
 unpriv
 upsd
