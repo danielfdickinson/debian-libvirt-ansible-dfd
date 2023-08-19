@@ -5,7 +5,7 @@ infrastructure' cluster, including mail server, groupware, and web hosting.
 
 The main configuration and management of virtual hosts is not done here. The
 author uses [Ansible to manage the hosts for the SOHO/KOHO
-cluster](https://gitlab.com/danielfdickinson/debian-soho-ansible-dfd).
+cluster](https://github.com/danielfdickinson/debian-soho-ansible-dfd).
 
 This repository should not include any unencrypted private or even particularly
 personalised information. It does, however, depend on adding some (to be
@@ -23,7 +23,7 @@ Not yet created.
 
 ### Repository URL
 
-<https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd>
+<https://github.com/danielfdickinson/debian-libvirt-ansible-dfd>
 
 ## Features and default configuration
 
